@@ -1,0 +1,39 @@
+{
+    "dir": "./",
+    "level": "info",
+    "deletion_interval": 7,
+    "colors": [
+        "\u001b[0m",
+        "\u001b[0m"
+    ],
+    "loggers": {
+        "Validator": {
+            "name": "Validator",
+            "colors": [
+                "\u001b[0m",
+                "\u001b[0m"
+            ]
+        },
+        "Reader": {
+            "name": "Reader",
+            "colors": [
+                "\u001b[0m",
+                "\u001b[0m"
+            ]
+        },
+        "Fail": {
+            "name": "Fail",
+            "colors": [
+                "\u001b[0m",
+                "\u001b[0m"
+            ]
+        },
+        "Success": {
+            "name": "Success",
+            "colors": [
+                "\u001b[0m",
+                "\u001b[0m"
+            ]
+        }
+    }
+}

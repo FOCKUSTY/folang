@@ -13,6 +13,7 @@ config.yml
 hasing.ts
 
 # Logs
+log
 logs
 notUsing.log
 npm-debug.log*
