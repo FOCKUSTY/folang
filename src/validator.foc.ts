@@ -10,13 +10,10 @@ class Validator {
 
 	private readonly data = (file?: string): [string, string[], boolean] => {
 		if (file) return [file, file.split("\r\n"), true];
-
 		if (this._file) return [this._file, this._file.split("\r\n"), true];
 
 		const fl = file || this._file;
-
 		if (!fl) return ["", [], false];
-
 		const lines = fl.split("\r\n");
 
 		return [fl, lines, true];
