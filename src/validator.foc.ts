@@ -1,11 +1,8 @@
 import Logger, { Colors } from "fock-logger";
 
-const quotes = ["\`", "\'", "\""];
+const quotes = ["`", "'", '"'];
 const variableRegExp = /конст|пусть|const|let/;
-const variableCreate = [
-	"конст",
-	"пусть"
-];
+const variableCreate = ["конст", "пусть"];
 
 class Validator {
 	private readonly _file: string | undefined;
@@ -50,15 +47,23 @@ class Validator {
 		);
 	};
 
-	private readonly VariableValidator = (file: string, line: string, lineNumber: number) => {
+	private readonly VariableValidator = (
+		file: string,
+		line: string,
+		lineNumber: number
+	) => {
 		const matched = line.match(variableRegExp);
 
 		if (!matched) {
 			console.log(line.match(/\s*[А-Яа-яA-Za-z]+\s*=/));
-		};
-	}
+		}
+	};
 
-	private readonly VariablesTypesValidator = (file: string, line: string, lineNumber: number) => {
+	private readonly VariablesTypesValidator = (
+		file: string,
+		line: string,
+		lineNumber: number
+	) => {
 		const matched = line.match(/:\s*[\W]+\s*=/);
 
 		if (!matched) return true;
@@ -72,20 +77,30 @@ class Validator {
 			];
 
 			if (!line.match(regexps[0]) && !line.match(/конст|пусть|const|let/g)) {
-				this._logger.execute(`Линия ${lineNumber} не имеет объявление переменной`, Colors.red);
+				this._logger.execute(
+					`Линия ${lineNumber} не имеет объявление переменной`,
+					Colors.red
+				);
 				this.PrintErrorFix(line, line, file);
-				this._logger.execute(`Линия ${lineNumber} не имеет объявление переменной`, Colors.red);
-				
-				return false;	
-			};
-		};
+				this._logger.execute(
+					`Линия ${lineNumber} не имеет объявление переменной`,
+					Colors.red
+				);
+
+				return false;
+			}
+		}
 
 		if (type) return true;
 
 		return true;
-	}
+	};
 
-	private readonly QuotesValidator = (file: string, line: string, lineNumber: number): boolean => {
+	private readonly QuotesValidator = (
+		file: string,
+		line: string,
+		lineNumber: number
+	): boolean => {
 		for (const index in quotes) {
 			const quote = quotes[index];
 			const regexp = new RegExp(`[${quote}]`, "g");
@@ -94,13 +109,19 @@ class Validator {
 			if (!lineQuotes) continue;
 
 			if (lineQuotes.length % 2 === 1) {
-				this._logger.execute(`Линия ${lineNumber} не имеет закрывающей скобки`, Colors.red);
+				this._logger.execute(
+					`Линия ${lineNumber} не имеет закрывающей скобки`,
+					Colors.red
+				);
 				this.PrintErrorFix(line, line, file);
-				this._logger.execute(`Линия ${lineNumber} не имеет закрывающей скобки`, Colors.red);
-				
+				this._logger.execute(
+					`Линия ${lineNumber} не имеет закрывающей скобки`,
+					Colors.red
+				);
+
 				return false;
 			} else return true;
-		};
+		}
 
 		return true;
 	};
@@ -109,31 +130,47 @@ class Validator {
 		for (const index in lines) {
 			const line = lines[index];
 			const lineNumber = Number(index) + 1;
-			
-			if (!!line.match(/\s+/g) && line.includes(";") && !line.match(/[\wА-Яа-я]+/g)) {
-				this._logger.execute(`Линия ${lineNumber} содержит лишнюю ";"`, Colors.red);
+
+			if (
+				!!line.match(/\s+/g) &&
+				line.includes(";") &&
+				!line.match(/[\wА-Яа-я]+/g)
+			) {
+				this._logger.execute(
+					`Линия ${lineNumber} содержит лишнюю ";"`,
+					Colors.red
+				);
 				this.PrintErrorFix(line, line, file);
-				this._logger.execute(`Линия ${lineNumber} содержит лишнюю ";"`, Colors.red);
+				this._logger.execute(
+					`Линия ${lineNumber} содержит лишнюю ";"`,
+					Colors.red
+				);
 
 				return false;
-			};
+			}
 
-			if (!(!!line.match(/\s+/g) || line === "" && !line.match(/\w+/g))) {
+			if (!(!!line.match(/\s+/g) || (line === "" && !line.match(/\w+/g)))) {
 				if (line.match(/;/g)?.length !== 1 || !line.endsWith(";")) {
-					this._logger.execute(`Линия ${lineNumber} не заканчивается на/не имеет/имеет больше ";"`, Colors.red);
+					this._logger.execute(
+						`Линия ${lineNumber} не заканчивается на/не имеет/имеет больше ";"`,
+						Colors.red
+					);
 					this.PrintErrorFix(line, line, file);
-					this._logger.execute(`Линия ${lineNumber} не заканчивается на/не имеет/имеет больше ";"`, Colors.red);
-	
+					this._logger.execute(
+						`Линия ${lineNumber} не заканчивается на/не имеет/имеет больше ";"`,
+						Colors.red
+					);
+
 					return false;
-				};
-			};
+				}
+			}
 
 			if (!this.QuotesValidator(file, line, lineNumber)) return false;
 
 			this.VariableValidator(file, line, lineNumber);
 
 			this.VariablesTypesValidator(file, line, lineNumber);
-		};
+		}
 
 		return true;
 	};
